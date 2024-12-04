@@ -1,8 +1,8 @@
 use crate::quests::quest_1::assemble_quest_1;
 use crate::quests::quest_2::assemble_quest_2;
 
-pub mod quest_1;
-pub mod quest_2;
+mod quest_1;
+mod quest_2;
 
 pub struct QuestFactory;
 impl QuestFactory {

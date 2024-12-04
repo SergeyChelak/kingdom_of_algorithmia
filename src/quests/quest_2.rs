@@ -1,4 +1,4 @@
-use crate::common::strings::reversed_str;
+use crate::common::strings::{reversed_str, split_into_trimmed_strings};
 use crate::quests::{Quest, QuestInputLoader, Solution};
 use std::collections::HashSet;
 
@@ -22,10 +22,11 @@ impl Solution for Q2 {
 
     fn part_two(&self, input: &str) -> String {
         let data = split_input(input);
+        let words = split_words(&data[0]);
         assert!(data.len() > 1);
         data[1..]
             .iter()
-            .map(|text| symbols_count(&data[0], text))
+            .map(|text| symbols_count(&words, text))
             .sum::<usize>()
             .to_string()
     }
@@ -38,11 +39,8 @@ impl Solution for Q2 {
             let arr = row.chars().collect::<Vec<char>>();
             matrix.push(arr);
         }
-        let Some((_, words)) = data[0].split_once(":") else {
-            panic!("Invalid format");
-        };
-        let words = words
-            .split(",")
+        let words = split_words(&data[0])
+            .iter()
             .map(|word| word.trim().chars().collect::<Vec<char>>())
             .collect::<Vec<Vec<char>>>();
 
@@ -93,7 +91,6 @@ fn traverse(
             return None;
         }
         output.insert((row, col));
-
         let rows = matrix.len();
         let cols = matrix[row].len();
         col += cols;
@@ -109,29 +106,28 @@ fn traverse(
     Some(output)
 }
 fn split_input(input: &str) -> Vec<String> {
-    input
-        .split("\n")
-        .map(|s| s.trim())
+    split_into_trimmed_strings(input)
+        .iter()
         .filter(|s| !s.is_empty())
         .map(|s| s.to_string())
         .collect::<Vec<String>>()
 }
 
-fn words_count(words: &str, text: &str) -> usize {
-    let Some((_, words)) = words.split_once(":") else {
+fn split_words(line: &str) -> Vec<&str> {
+    let Some((_, words)) = line.split_once(":") else {
         panic!("Invalid format");
     };
-    words
-        .split(",")
+    words.split(",").collect::<Vec<&str>>()
+}
+
+fn words_count(words: &str, text: &str) -> usize {
+    split_words(words)
+        .iter()
         .map(|word| text.match_indices(word).count())
         .sum::<usize>()
 }
 
-fn symbols_count(words: &str, text: &str) -> usize {
-    let Some((_, words)) = words.split_once(":") else {
-        panic!("Invalid format");
-    };
-    let words = words.split(",").collect::<Vec<&str>>();
+fn symbols_count(words: &[&str], text: &str) -> usize {
     let mut set = HashSet::<usize>::new();
 
     let reversed = reversed_str(text);
@@ -152,7 +148,6 @@ fn symbols_count(words: &str, text: &str) -> usize {
                 })
         }
     }
-
     set.len()
 }
 

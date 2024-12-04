@@ -5,7 +5,7 @@ mod common;
 mod quests;
 
 fn main() {
-    println!("Kingdom of Algorithmia!");
+    println!("Kingdom of Algorithmia");
     let factory = QuestFactory;
     let Some(quest) = factory.custom() else {
         println!("[Warn] No Quest");
