@@ -1,4 +1,6 @@
 pub mod quest_1;
+pub mod quest_2;
+
 pub use quest_1::*;
 
 #[derive(Debug)]

@@ -1,9 +1,9 @@
-use crate::quests::Quest1;
+use crate::quests::quest_2::Quest2;
 
 mod quests;
 
 fn main() {
-    let mut quest = Quest1::new();
+    let mut quest = Quest2::new();
     if let Err(err) = quest.load() {
         println!("[Error] {err:?}");
         return;
