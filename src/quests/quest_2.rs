@@ -24,7 +24,6 @@ impl Quest2 {
     pub fn part_one(&mut self) -> String {
         let data = split_input(&self.inputs[0]);
         assert_eq!(data.len(), 2);
-        // println!("{:?}", data);
         words_count(&data[0], &data[1]).to_string()
     }
 
@@ -46,19 +45,14 @@ impl Quest2 {
             let arr = row.chars().collect::<Vec<char>>();
             matrix.push(arr);
         }
-        //
-        println!("{:?}", matrix);
-        //
         let Some((_, words)) = data[0].split_once(":") else {
             panic!("Invalid format");
         };
         let words = words
             .split(",")
-            .inspect(|word| print!("{} ", word))
             .map(|word| word.trim().chars().collect::<Vec<char>>())
             .collect::<Vec<Vec<char>>>();
-        println!();
-        //
+
         let directions = [
             Direction::Down,
             Direction::Up,
@@ -128,8 +122,8 @@ fn reversed(s: &str) -> String {
 
 fn split_input(input: &str) -> Vec<String> {
     input
-        // .split("\n")
-        .split("\r\n")
+        .split("\n")
+        .map(|s| s.trim())
         .filter(|s| !s.is_empty())
         .map(|s| s.to_string())
         .collect::<Vec<String>>()
