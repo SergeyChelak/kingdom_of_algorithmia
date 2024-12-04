@@ -1,36 +1,29 @@
-use crate::quests::{QuestError, QuestResult};
+use crate::quests::{Quest, QuestInputLoader, Solution};
 use std::collections::HashMap;
 
 // Quest 1: The Battle for the Farmlands
-#[derive(Default)]
-pub struct Quest1 {
-    inputs: Vec<String>,
+pub fn assemble_quest_1() -> Quest {
+    let sources = ["input/quest_1a", "input/quest_1b", "input/quest_1c"];
+    Quest {
+        title: "The Battle for the Farmlands".to_string(),
+        input_loader: QuestInputLoader::with_sources(&sources),
+        solution: Box::new(BattleForFarmlands),
+    }
 }
 
-impl Quest1 {
-    pub fn new() -> Quest1 {
-        Self::default()
+struct BattleForFarmlands;
+
+impl Solution for BattleForFarmlands {
+    fn part_one(&self, input: &str) -> String {
+        calculate_poison_amount(input, 1)
     }
 
-    pub fn load(&mut self) -> QuestResult<()> {
-        self.inputs.clear();
-        let files = ["input/quest_1a", "input/quest_1b", "input/quest_1c"];
-        for file in files {
-            let input = std::fs::read_to_string(file).map_err(QuestError::from)?;
-            self.inputs.push(input);
-        }
-        Ok(())
-    }
-    pub fn part_one(&self) -> String {
-        calculate_poison_amount(&self.inputs[0], 1)
+    fn part_two(&self, input: &str) -> String {
+        calculate_poison_amount(input, 2)
     }
 
-    pub fn part_two(&self) -> String {
-        calculate_poison_amount(&self.inputs[1], 2)
-    }
-
-    pub fn part_three(&self) -> String {
-        calculate_poison_amount(&self.inputs[2], 3)
+    fn part_three(&self, input: &str) -> String {
+        calculate_poison_amount(&input, 3)
     }
 }
 

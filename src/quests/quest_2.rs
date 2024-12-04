@@ -1,6 +1,13 @@
 use crate::quests::{QuestError, QuestResult};
 use std::collections::HashSet;
 
+// TODO: remove
+impl From<std::io::Error> for QuestError {
+    fn from(_e: std::io::Error) -> Self {
+        QuestError::IoError
+    }
+}
+
 #[derive(Default)]
 pub struct Quest2 {
     inputs: Vec<String>,
