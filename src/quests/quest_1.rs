@@ -1,33 +1,32 @@
 use crate::quests::{Quest, QuestInputLoader, Solution};
 use std::collections::HashMap;
 
-// Quest 1: The Battle for the Farmlands
 pub fn assemble_quest_1() -> Quest {
     let sources = ["input/quest_1a", "input/quest_1b", "input/quest_1c"];
     Quest {
-        title: "The Battle for the Farmlands".to_string(),
+        title: "Quest 1: The Battle for the Farmlands".to_string(),
         input_loader: QuestInputLoader::with_sources(&sources),
-        solution: Box::new(BattleForFarmlands),
+        solution: Box::new(Q1),
     }
 }
 
-struct BattleForFarmlands;
+struct Q1;
 
-impl Solution for BattleForFarmlands {
+impl Solution for Q1 {
     fn part_one(&self, input: &str) -> String {
-        calculate_poison_amount(input, 1)
+        calculate_potion_amount(input, 1)
     }
 
     fn part_two(&self, input: &str) -> String {
-        calculate_poison_amount(input, 2)
+        calculate_potion_amount(input, 2)
     }
 
     fn part_three(&self, input: &str) -> String {
-        calculate_poison_amount(&input, 3)
+        calculate_potion_amount(input, 3)
     }
 }
 
-fn calculate_poison_amount(input: &str, enemies: usize) -> String {
+fn calculate_potion_amount(input: &str, enemies: usize) -> String {
     let map = HashMap::from([('A', 0), ('B', 1), ('C', 3), ('D', 5)]);
     input
         .chars()

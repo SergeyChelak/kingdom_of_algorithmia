@@ -1,6 +1,7 @@
 use crate::quests::{Quest, QuestFactory};
 use std::time::Instant;
 
+mod common;
 mod quests;
 
 fn main() {

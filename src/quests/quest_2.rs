@@ -1,41 +1,27 @@
-use crate::quests::{QuestError, QuestResult};
+use crate::common::strings::reversed_str;
+use crate::quests::{Quest, QuestInputLoader, Solution};
 use std::collections::HashSet;
 
-// TODO: remove
-impl From<std::io::Error> for QuestError {
-    fn from(_e: std::io::Error) -> Self {
-        QuestError::IoError
+pub fn assemble_quest_2() -> Quest {
+    let sources = ["input/quest_2a", "input/quest_2b", "input/quest_2c"];
+    Quest {
+        title: "Quest 2: The Runes of Power".to_string(),
+        input_loader: QuestInputLoader::with_sources(&sources),
+        solution: Box::new(Q2),
     }
 }
 
-#[derive(Default)]
-pub struct Quest2 {
-    inputs: Vec<String>,
-}
+struct Q2;
 
-impl Quest2 {
-    pub fn new() -> Self {
-        Self::default()
-    }
-
-    pub fn load(&mut self) -> QuestResult<()> {
-        self.inputs.clear();
-        let files = ["input/quest_2a", "input/quest_2b", "input/quest_2c"];
-        for file in files {
-            let input = std::fs::read_to_string(file).map_err(QuestError::from)?;
-            self.inputs.push(input);
-        }
-        Ok(())
-    }
-
-    pub fn part_one(&mut self) -> String {
-        let data = split_input(&self.inputs[0]);
+impl Solution for Q2 {
+    fn part_one(&self, input: &str) -> String {
+        let data = split_input(input);
         assert_eq!(data.len(), 2);
         words_count(&data[0], &data[1]).to_string()
     }
 
-    pub fn part_two(&mut self) -> String {
-        let data = split_input(&self.inputs[1]);
+    fn part_two(&self, input: &str) -> String {
+        let data = split_input(input);
         assert!(data.len() > 1);
         data[1..]
             .iter()
@@ -44,10 +30,10 @@ impl Quest2 {
             .to_string()
     }
 
-    pub fn part_three(&mut self) -> String {
-        assert!(!&self.inputs[2].is_empty());
+    fn part_three(&self, input: &str) -> String {
+        assert!(!input.is_empty());
         let mut matrix: Vec<Vec<char>> = Vec::new();
-        let data = split_input(&self.inputs[2]);
+        let data = split_input(input);
         for row in &data[1..] {
             let arr = row.chars().collect::<Vec<char>>();
             matrix.push(arr);
@@ -94,7 +80,7 @@ enum Direction {
 }
 
 fn traverse(
-    matrix: &Vec<Vec<char>>,
+    matrix: &[Vec<char>],
     mut row: usize,
     mut col: usize,
     direction: Direction,
@@ -122,11 +108,6 @@ fn traverse(
     }
     Some(output)
 }
-
-fn reversed(s: &str) -> String {
-    s.chars().rev().collect()
-}
-
 fn split_input(input: &str) -> Vec<String> {
     input
         .split("\n")
@@ -153,7 +134,7 @@ fn symbols_count(words: &str, text: &str) -> usize {
     let words = words.split(",").collect::<Vec<&str>>();
     let mut set = HashSet::<usize>::new();
 
-    let reversed = reversed(text);
+    let reversed = reversed_str(text);
     for word in words {
         let indices = text.match_indices(word);
         for (i, val) in indices {
@@ -177,51 +158,35 @@ fn symbols_count(words: &str, text: &str) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use crate::quests::quest_2::Quest2;
+    use super::*;
 
     #[test]
     fn quest2_case_1() {
-        let mut q = Quest2 {
-            inputs: vec![r"WORDS:THE,OWE,MES,ROD,HER
+        let input = r"WORDS:THE,OWE,MES,ROD,HER
 
-AWAKEN THE POWER ADORNED WITH THE FLAMES BRIGHT IRE"
-                .to_string()],
-        };
-        assert_eq!(q.part_one(), "4");
+AWAKEN THE POWER ADORNED WITH THE FLAMES BRIGHT IRE";
+        assert_eq!(Q2.part_one(input), "4");
     }
 
     #[test]
     fn quest2_case_2() {
-        let mut q = Quest2 {
-            inputs: vec![
-                "".to_string(),
-                r"WORDS:THE,OWE,MES,ROD,HER,QAQ
+        let input = r"WORDS:THE,OWE,MES,ROD,HER,QAQ
 
 AWAKEN THE POWE ADORNED WITH THE FLAMES BRIGHT IRE
 THE FLAME SHIELDED THE HEART OF THE KINGS
 POWE PO WER P OWE R
 THERE IS THE END
-QAQAQ"
-                    .to_string(),
-            ],
-        };
-        assert_eq!(q.part_two(), "42");
+QAQAQ";
+        assert_eq!(Q2.part_two(input), "42");
     }
 
     #[test]
     fn quest2_case_3() {
-        let mut q = Quest2 {
-            inputs: vec![
-                "".to_string(),
-                "".to_string(),
-                r"WORDS:THE,OWE,MES,ROD,RODEO
+        let input = r"WORDS:THE,OWE,MES,ROD,RODEO
 
 HELWORLT
 ENIGWDXL
-TRODEOAL"
-                    .to_string(),
-            ],
-        };
-        assert_eq!(q.part_three(), "10");
+TRODEOAL";
+        assert_eq!(Q2.part_three(input), "10");
     }
 }

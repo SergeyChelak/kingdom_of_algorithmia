@@ -1,4 +1,5 @@
 use crate::quests::quest_1::assemble_quest_1;
+use crate::quests::quest_2::assemble_quest_2;
 
 pub mod quest_1;
 pub mod quest_2;
@@ -8,12 +9,13 @@ impl QuestFactory {
     pub fn quest(&self, number: usize) -> Option<Quest> {
         match number {
             1 => Some(assemble_quest_1()),
+            2 => Some(assemble_quest_2()),
             _ => None,
         }
     }
 
     pub fn custom(&self) -> Option<Quest> {
-        self.quest(1)
+        self.quest(2)
     }
 }
 
