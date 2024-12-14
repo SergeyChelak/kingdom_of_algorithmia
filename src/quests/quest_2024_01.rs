@@ -1,17 +1,17 @@
 use crate::quests::{Quest, QuestInputLoader, Solution};
 use std::collections::HashMap;
 
-pub fn assemble_quest_1() -> Quest {
+pub fn assemble_quest_2024_1() -> Quest {
     Quest {
         title: "Quest 1: The Battle for the Farmlands".to_string(),
         input_loader: QuestInputLoader::with_quest_date(2024, 1),
-        solution: Box::new(Q1),
+        solution: Box::new(Q2024_1),
     }
 }
 
-struct Q1;
+struct Q2024_1;
 
-impl Solution for Q1 {
+impl Solution for Q2024_1 {
     fn part_one(&self, input: &str) -> String {
         calculate_potion_amount(input, 1)
     }

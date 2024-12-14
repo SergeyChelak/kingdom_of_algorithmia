@@ -2,17 +2,17 @@ use crate::common::strings::{reversed_str, split_into_trimmed_strings};
 use crate::quests::{Quest, QuestInputLoader, Solution};
 use std::collections::HashSet;
 
-pub fn assemble_quest_2() -> Quest {
+pub fn assemble_quest_2024_2() -> Quest {
     Quest {
         title: "Quest 2: The Runes of Power".to_string(),
         input_loader: QuestInputLoader::with_quest_date(2024, 2),
-        solution: Box::new(Q2),
+        solution: Box::new(Q2024_2),
     }
 }
 
-struct Q2;
+struct Q2024_2;
 
-impl Solution for Q2 {
+impl Solution for Q2024_2 {
     fn part_one(&self, input: &str) -> String {
         let data = split_input(input);
         assert_eq!(data.len(), 2);
@@ -159,7 +159,7 @@ mod tests {
         let input = r"WORDS:THE,OWE,MES,ROD,HER
 
 AWAKEN THE POWER ADORNED WITH THE FLAMES BRIGHT IRE";
-        assert_eq!(Q2.part_one(input), "4");
+        assert_eq!(Q2024_2.part_one(input), "4");
     }
 
     #[test]
@@ -171,7 +171,7 @@ THE FLAME SHIELDED THE HEART OF THE KINGS
 POWE PO WER P OWE R
 THERE IS THE END
 QAQAQ";
-        assert_eq!(Q2.part_two(input), "42");
+        assert_eq!(Q2024_2.part_two(input), "42");
     }
 
     #[test]
@@ -181,6 +181,6 @@ QAQAQ";
 HELWORLT
 ENIGWDXL
 TRODEOAL";
-        assert_eq!(Q2.part_three(input), "10");
+        assert_eq!(Q2024_2.part_three(input), "10");
     }
 }

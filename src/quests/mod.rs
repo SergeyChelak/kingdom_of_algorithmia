@@ -1,21 +1,25 @@
-use crate::quests::quest_1::assemble_quest_1;
-use crate::quests::quest_2::assemble_quest_2;
+use quest_2024_03::assemble_quest_2024_3;
 
-mod quest_1;
-mod quest_2;
+use crate::quests::quest_2024_01::assemble_quest_2024_1;
+use crate::quests::quest_2024_02::assemble_quest_2024_2;
+
+mod quest_2024_01;
+mod quest_2024_02;
+mod quest_2024_03;
 
 pub struct QuestFactory;
 impl QuestFactory {
     pub fn quest(&self, number: usize) -> Option<Quest> {
         match number {
-            1 => Some(assemble_quest_1()),
-            2 => Some(assemble_quest_2()),
+            1 => Some(assemble_quest_2024_1()),
+            2 => Some(assemble_quest_2024_2()),
+            3 => Some(assemble_quest_2024_3()),
             _ => None,
         }
     }
 
     pub fn custom(&self) -> Option<Quest> {
-        self.quest(2)
+        self.quest(3)
     }
 }
 
@@ -46,12 +50,10 @@ pub struct QuestInputLoader {
 impl QuestInputLoader {
     pub fn with_quest_date(year: usize, number: usize) -> Self {
         let path_list = (1..=3)
-        .map(|part| {
-            format!("everybody_codes_e{}_q{:02}_p{}.txt", year, number, part)
-        })
-        // .inspect(|p| println!("{p}"))
-        .map(|s| format!("input/{}", s))
-        .collect::<Vec<_>>();
+            .map(|part| format!("everybody_codes_e{}_q{:02}_p{}.txt", year, number, part))
+            // .inspect(|p| println!("{p}"))
+            .map(|s| format!("input/{}", s))
+            .collect::<Vec<_>>();
         Self::with_sources(&path_list)
     }
 

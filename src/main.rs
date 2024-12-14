@@ -24,7 +24,7 @@ fn execute(quest: &Quest) {
     let solution = &quest.solution;
     for part in 0..3 {
         let Ok(input) = quest.input_loader.load(part) else {
-            println!("[Error] failed to load input for part {part}");
+            println!("[Error] failed to load input for part {}", part + 1);
             continue;
         };
         let now = Instant::now();

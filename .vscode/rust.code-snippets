@@ -1,0 +1,49 @@
+{
+    "Puzzle Template": {
+        "prefix": "qqnewpuzzle",
+        "description": "Creates template struct & factory for new quest",
+        "body": [
+            "use crate::quests::{Quest, QuestInputLoader, Solution};",
+            "",
+            "pub fn assemble_quest_$1_$2() -> Quest {",
+            "\tQuest {",
+            "\t\ttitle: \"Quest $1 $2: ???\".to_string(),",
+            "\t\tinput_loader: QuestInputLoader::with_quest_date($1, $2),",
+            "\t\tsolution: Box::new(Q$1_$2),",
+            "\t}",
+            "}",
+            "",
+            "struct Q$1_$2;",
+            "",
+            "impl Solution for Q$1_$2 {",
+            "\tfn part_one(&self, input: &str) -> String {",
+            "\ttodo!()",
+            "\t}",
+            "",
+            "\tfn part_two(&self, input: &str) -> String {",
+            "\ttodo!()",
+            "\t}",
+            "",
+            "\tfn part_three(&self, input: &str) -> String {",
+            "\ttodo!()",
+            "\t}",
+            "",
+            "}",
+        ]
+    },
+    "Test Module": {
+        "prefix": "qqtest",
+        "description": "Creates template for test module",
+        "body": [
+            "#[cfg(test)]",
+            "mod test {",
+            "\tuse super::*;",
+            "",
+            "\t#[test]",
+            "\tfn your_test() {",
+            "\t // TODO: test",
+            "\t}",
+            "}"
+        ]
+    }
+}
