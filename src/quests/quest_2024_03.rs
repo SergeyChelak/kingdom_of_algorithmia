@@ -17,13 +17,8 @@ struct Q2024_3;
 
 impl Solution for Q2024_3 {
     fn part_one(&self, input: &str) -> String {
-        let mut area = make_area(input);
-        let mut count = area.len();
-        while !area.is_empty() {
-            area = next_area(&area);
-            count += area.len();
-        }
-        count.to_string()
+        let directions = [(1, 0), (-1, 0), (0, 1), (0, -1)];
+        blocks_count(input, &directions).to_string()
     }
 
     fn part_two(&self, input: &str) -> String {
@@ -31,39 +26,56 @@ impl Solution for Q2024_3 {
     }
 
     fn part_three(&self, input: &str) -> String {
-        todo!()
+        let directions = [
+            (1, 0),
+            (-1, 0),
+            (0, 1),
+            (0, -1),
+            (1, 1),
+            (-1, 1),
+            (1, -1),
+            (-1, -1),
+        ];
+        blocks_count(input, &directions).to_string()
     }
 }
 
 type Position = Position2<isize>;
 
+type Direction = (isize, isize);
+
+fn blocks_count(input: &str, directions: &[Direction]) -> usize {
+    let mut area = make_area(input);
+    let mut count = area.len();
+    while !area.is_empty() {
+        area = next_area(&area, directions);
+        count += area.len();
+    }
+    count
+}
+
 fn make_area(input: &str) -> HashSet<Position> {
     let mut area = HashSet::new();
-    input
-        .split('\n')
-        // .map(|s| s.trim())
-        // .filter(|s| !s.is_empty())
-        .enumerate()
-        .for_each(|(row, s)| {
-            for (col, ch) in s.chars().enumerate() {
-                if ch != '#' {
-                    continue;
-                }
-                area.insert(Position::new(row as isize, col as isize));
+    input.split('\n').enumerate().for_each(|(row, s)| {
+        for (col, ch) in s.chars().enumerate() {
+            if ch != '#' {
+                continue;
             }
-        });
+            area.insert(Position::new(row as isize, col as isize));
+        }
+    });
     area
 }
 
-fn next_area(area: &HashSet<Position>) -> HashSet<Position> {
+fn next_area(area: &HashSet<Position>, directions: &[Direction]) -> HashSet<Position> {
     let mut result = HashSet::new();
     for pos in area.iter() {
-        let count = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        let count = directions
             .iter()
             .map(|(i, j)| Position::new(pos.row + i, pos.col + j))
             .filter(|pos| area.contains(pos))
             .count();
-        if count == 4 {
+        if count == directions.len() {
             result.insert(*pos);
         }
     }
@@ -75,7 +87,7 @@ mod test {
     use super::*;
 
     #[test]
-    fn quest2024_3_part_1() {
+    fn quest2024_3_case() {
         let input = "..........
 ..###.##..
 ...####...
@@ -84,6 +96,7 @@ mod test {
 ...####...
 ..........";
         let quest = Q2024_3;
-        assert_eq!(quest.part_one(&input), "35")
+        assert_eq!(quest.part_one(&input), "35");
+        assert_eq!(quest.part_three(&input), "29");
     }
 }
