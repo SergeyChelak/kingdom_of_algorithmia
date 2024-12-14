@@ -3,10 +3,9 @@ use crate::quests::{Quest, QuestInputLoader, Solution};
 use std::collections::HashSet;
 
 pub fn assemble_quest_2() -> Quest {
-    let sources = ["input/quest_2a", "input/quest_2b", "input/quest_2c"];
     Quest {
         title: "Quest 2: The Runes of Power".to_string(),
-        input_loader: QuestInputLoader::with_sources(&sources),
+        input_loader: QuestInputLoader::with_quest_date(2024, 2),
         solution: Box::new(Q2),
     }
 }

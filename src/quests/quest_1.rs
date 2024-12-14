@@ -2,10 +2,9 @@ use crate::quests::{Quest, QuestInputLoader, Solution};
 use std::collections::HashMap;
 
 pub fn assemble_quest_1() -> Quest {
-    let sources = ["input/quest_1a", "input/quest_1b", "input/quest_1c"];
     Quest {
         title: "Quest 1: The Battle for the Farmlands".to_string(),
-        input_loader: QuestInputLoader::with_sources(&sources),
+        input_loader: QuestInputLoader::with_quest_date(2024, 1),
         solution: Box::new(Q1),
     }
 }
