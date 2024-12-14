@@ -1,4 +1,4 @@
-Repo with solutions for puzzles of [kingdom of algorithmia](https://everybody.codes)
+Repo with solutions for puzzles of [kingdom of algorithmia](https://everybody.codes)  
 Current progess:
 - small framework to execute puzzles
 - solved Quest 1: The Battle for the Farmlands
