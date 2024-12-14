@@ -27,7 +27,7 @@ impl Solution for Q2024_3 {
     }
 
     fn part_two(&self, input: &str) -> String {
-        todo!()
+        self.part_one(input)
     }
 
     fn part_three(&self, input: &str) -> String {
