@@ -1,11 +1,12 @@
+use quest_2024_01::assemble_quest_2024_1;
+use quest_2024_02::assemble_quest_2024_2;
 use quest_2024_03::assemble_quest_2024_3;
-
-use crate::quests::quest_2024_01::assemble_quest_2024_1;
-use crate::quests::quest_2024_02::assemble_quest_2024_2;
+use quest_2024_04::assemble_quest_2024_4;
 
 mod quest_2024_01;
 mod quest_2024_02;
 mod quest_2024_03;
+mod quest_2024_04;
 
 pub struct QuestFactory;
 impl QuestFactory {
@@ -14,12 +15,13 @@ impl QuestFactory {
             1 => Some(assemble_quest_2024_1()),
             2 => Some(assemble_quest_2024_2()),
             3 => Some(assemble_quest_2024_3()),
+            4 => Some(assemble_quest_2024_4()),
             _ => None,
         }
     }
 
     pub fn custom(&self) -> Option<Quest> {
-        self.quest(3)
+        self.quest(4)
     }
 }
 
