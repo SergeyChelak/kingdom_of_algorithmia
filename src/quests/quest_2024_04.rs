@@ -11,33 +11,45 @@ pub fn assemble_quest_2024_4() -> Quest {
     }
 }
 
-type Int = u32;
+type Int = u64;
 
 struct Q2024_4;
 
 impl Solution for Q2024_4 {
     fn part_one(&self, input: &str) -> String {
-        let values = split_into_trimmed_strings(input)
-            .iter()
-            .map(|x| x.parse::<Int>().expect("Invalid input"))
-            .collect::<Vec<_>>();
-        get_min_hammer_strikes(&values).to_string()
+        let values = parse(input);
+        get_min_strikes(&values).to_string()
     }
 
     fn part_two(&self, input: &str) -> String {
-        todo!()
+        self.part_one(input)
     }
 
     fn part_three(&self, input: &str) -> String {
-        todo!()
+        let values = parse(input);
+        get_min_bidirectional_strikes(&values).to_string()
     }
 }
 
-fn get_min_hammer_strikes(arr: &[Int]) -> Int {
+fn get_min_strikes(arr: &[Int]) -> Int {
     let Some(min) = arr.iter().min() else {
         return 0;
     };
     arr.iter().map(|x| x - min).sum()
+}
+
+fn get_min_bidirectional_strikes(arr: &[Int]) -> Int {
+    arr.iter()
+        .map(|nail| arr.iter().map(|x| x.abs_diff(*nail)).sum())
+        .min()
+        .unwrap_or_default()
+}
+
+fn parse(input: &str) -> Vec<Int> {
+    split_into_trimmed_strings(input)
+        .iter()
+        .map(|x| x.parse::<Int>().expect("Invalid input"))
+        .collect::<Vec<_>>()
 }
 
 #[cfg(test)]
@@ -46,7 +58,13 @@ mod test {
 
     #[test]
     fn quest2024_4_part1() {
-        let result = get_min_hammer_strikes(&[3, 4, 7, 8]);
+        let result = get_min_strikes(&[3, 4, 7, 8]);
         assert_eq!(result, 10);
+    }
+
+    #[test]
+    fn quest2024_4_part3() {
+        let result = get_min_bidirectional_strikes(&[2, 4, 5, 6, 8]);
+        assert_eq!(result, 8);
     }
 }
