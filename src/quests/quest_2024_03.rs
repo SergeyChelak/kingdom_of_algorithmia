@@ -96,7 +96,7 @@ mod test {
 ...####...
 ..........";
         let quest = Q2024_3;
-        assert_eq!(quest.part_one(&input), "35");
-        assert_eq!(quest.part_three(&input), "29");
+        assert_eq!(quest.part_one(input), "35");
+        assert_eq!(quest.part_three(input), "29");
     }
 }
