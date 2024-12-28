@@ -130,10 +130,6 @@ mod test {
 4 5 2 3
 5 2 3 4";
         let mut data = parse(input);
-        // assert_eq!(make_movements(&mut data, 1), "3345");
-        // assert_eq!(make_movements(&mut data, 2), "3245");
-        // assert_eq!(make_movements(&mut data, 3), "3255");
-        // assert_eq!(make_movements(&mut data, 4), "3252");
         assert_eq!(make_movements(&mut data, 10), "2323");
     }
 
