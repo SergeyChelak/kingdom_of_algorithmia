@@ -1,4 +1,7 @@
-use std::collections::HashMap;
+use std::{
+    cmp::Ordering,
+    collections::{HashMap, HashSet},
+};
 
 use crate::{
     common::{strings::TrimmedSplit, Vec2},
@@ -39,16 +42,33 @@ impl Solution for Q2024_5 {
     }
 
     fn part_three(&self, input: &str) -> String {
-        todo!()
+        let mut data = parse(input);
+        let mut set = HashSet::<String>::new();
+        let mut result = String::new();
+        let mut last_add = 0;
+        for step in 0.. {
+            process_movement(&mut data, step);
+            let output = calculate_output(&data);
+            if !set.insert(output.clone()) {
+                if step - last_add > set.len() {
+                    break;
+                }
+                continue;
+            }
+            last_add = step;
+            if matches!(result.cmp(&output), Ordering::Less) {
+                result = output;
+            }
+        }
+        result
     }
 }
 
-type Int = u32;
+type Int = usize;
 
 fn make_movements(data: &mut Vec2<Int>, times: usize) -> String {
     for step in 0..times {
         process_movement(data, step);
-        // println!("{:?}", data);
     }
     calculate_output(data)
 }
@@ -56,22 +76,12 @@ fn make_movements(data: &mut Vec2<Int>, times: usize) -> String {
 fn process_movement(data: &mut Vec2<Int>, step: usize) {
     let col = step % data.len();
     let val = data[col].remove(0);
-    let mut is_forward = true;
-    let mut idx = 0;
     let next_col = (col + 1) % data.len();
-    for _ in 0..val {
-        if idx == data[next_col].len() {
-            is_forward = false;
-            continue;
-        }
-
-        if is_forward {
-            idx += 1;
-        } else {
-            idx -= 1;
-        }
+    let next_len = data[next_col].len();
+    let mut pos = (val - 1) % (2 * next_len);
+    if pos > next_len {
+        pos = 2 * next_len - pos;
     }
-    let pos = if is_forward { idx - 1 } else { idx };
     data[next_col].insert(pos, val);
 }
 
@@ -125,5 +135,12 @@ mod test {
         // assert_eq!(make_movements(&mut data, 3), "3255");
         // assert_eq!(make_movements(&mut data, 4), "3252");
         assert_eq!(make_movements(&mut data, 10), "2323");
+    }
+
+    #[test]
+    fn quest2024_05_part3() {
+        let input = "2 3 4 5
+6 7 8 9";
+        assert_eq!(Q2024_5.part_three(input), "6584");
     }
 }
