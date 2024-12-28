@@ -29,11 +29,11 @@ impl Solution for Q2024_5 {
         let mut map = HashMap::<String, usize>::new();
         for step in 0.. {
             process_movement(&mut data, step);
-            let output = calculate_output(&mut data);
+            let output = calculate_output(&data);
             let entry = map.entry(output).or_default();
             *entry += 1;
             if *entry == 2024 {
-                let output = calculate_output(&mut data);
+                let output = calculate_output(&data);
                 let val = output.parse::<usize>().expect("Failed parse output value");
                 return (val * (1 + step)).to_string();
             }
