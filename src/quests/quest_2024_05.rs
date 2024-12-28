@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::{
     common::{strings::TrimmedSplit, Vec2},
     quests::{Quest, QuestInputLoader, Solution},
@@ -20,7 +22,20 @@ impl Solution for Q2024_5 {
     }
 
     fn part_two(&self, input: &str) -> String {
-        todo!()
+        let mut data = parse(input);
+        let mut map = HashMap::<String, usize>::new();
+        for step in 0.. {
+            process_movement(&mut data, step);
+            let output = calculate_output(&mut data);
+            let entry = map.entry(output).or_default();
+            *entry += 1;
+            if *entry == 2024 {
+                let output = calculate_output(&mut data);
+                let val = output.parse::<usize>().expect("Failed parse output value");
+                return (val * (1 + step)).to_string();
+            }
+        }
+        "Not found".to_string()
     }
 
     fn part_three(&self, input: &str) -> String {
@@ -32,27 +47,35 @@ type Int = u32;
 
 fn make_movements(data: &mut Vec2<Int>, times: usize) -> String {
     for step in 0..times {
-        let col = step % data.len();
-        let val = data[col].remove(0);
-        let mut is_forward = true;
-        let mut idx = 0;
-        let next_col = (col + 1) % data.len();
-        for _ in 0..val {
-            if idx == data[next_col].len() {
-                is_forward = false;
-                continue;
-            }
-
-            if is_forward {
-                idx += 1;
-            } else {
-                idx -= 1;
-            }
-        }
-        let pos = if is_forward { idx - 1 } else { idx };
-        data[next_col].insert(pos, val);
-        println!("{:?}", data);
+        process_movement(data, step);
+        // println!("{:?}", data);
     }
+    calculate_output(data)
+}
+
+fn process_movement(data: &mut Vec2<Int>, step: usize) {
+    let col = step % data.len();
+    let val = data[col].remove(0);
+    let mut is_forward = true;
+    let mut idx = 0;
+    let next_col = (col + 1) % data.len();
+    for _ in 0..val {
+        if idx == data[next_col].len() {
+            is_forward = false;
+            continue;
+        }
+
+        if is_forward {
+            idx += 1;
+        } else {
+            idx -= 1;
+        }
+    }
+    let pos = if is_forward { idx - 1 } else { idx };
+    data[next_col].insert(pos, val);
+}
+
+fn calculate_output(data: &[Vec<Int>]) -> String {
     data.iter()
         .map(|x| x.first().unwrap())
         .map(|x| x.to_string())
