@@ -1,4 +1,4 @@
-use crate::common::strings::{reversed_str, split_into_trimmed_strings};
+use crate::common::strings::{reversed_str, TrimmedSplit};
 use crate::quests::{Quest, QuestInputLoader, Solution};
 use std::collections::HashSet;
 
@@ -105,9 +105,8 @@ fn traverse(
     Some(output)
 }
 fn split_input(input: &str) -> Vec<String> {
-    split_into_trimmed_strings(input)
-        .iter()
-        .filter(|s| !s.is_empty())
+    input
+        .trimmed_split()
         .map(|s| s.to_string())
         .collect::<Vec<String>>()
 }

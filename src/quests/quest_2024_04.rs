@@ -1,5 +1,5 @@
 use crate::{
-    common::strings::split_into_trimmed_strings,
+    common::strings::TrimmedSplit,
     quests::{Quest, QuestInputLoader, Solution},
 };
 
@@ -46,8 +46,8 @@ fn get_min_bidirectional_strikes(arr: &[Int]) -> Int {
 }
 
 fn parse(input: &str) -> Vec<Int> {
-    split_into_trimmed_strings(input)
-        .iter()
+    input
+        .trimmed_split()
         .map(|x| x.parse::<Int>().expect("Invalid input"))
         .collect::<Vec<_>>()
 }

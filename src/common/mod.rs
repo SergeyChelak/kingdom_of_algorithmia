@@ -1,6 +1,6 @@
 pub mod strings;
 
-// pub type Vec2<T> = Vec<Vec<T>>;
+pub type Vec2<T> = Vec<Vec<T>>;
 
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
 pub struct Position2<T> {
