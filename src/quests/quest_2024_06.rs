@@ -30,8 +30,8 @@ impl Solution for Q2024_6 {
             .collect::<String>()
     }
 
-    fn part_three(&self, _input: &str) -> String {
-        todo!()
+    fn part_three(&self, input: &str) -> String {
+        self.part_two(input)
     }
 }
 
@@ -64,6 +64,9 @@ fn find_unique_path(tree: &Tree) -> Option<Vec<String>> {
             entry.push(value);
             return;
         };
+        if path.contains(&node) {
+            return;
+        }
         let Some(connections) = tree.get(node) else {
             return;
         };
@@ -75,6 +78,7 @@ fn find_unique_path(tree: &Tree) -> Option<Vec<String>> {
     }
 
     let mut output = HashMap::new();
+
     dfs(tree, "RR", &mut Vec::new(), &mut output);
 
     output
@@ -82,12 +86,3 @@ fn find_unique_path(tree: &Tree) -> Option<Vec<String>> {
         .find(|(_, val)| val.len() == 1)
         .and_then(|(_, set)| set.iter().next().cloned())
 }
-
-// fn find_root_node(tree: &Tree) -> Option<Node> {
-//     let all_keys = tree.keys().collect::<HashSet<_>>();
-//     let all_connections = tree.values().flatten().collect::<HashSet<_>>();
-//     all_keys
-//         .difference(&all_connections)
-//         .next()
-//         .map(|x| x.to_string())
-// }
