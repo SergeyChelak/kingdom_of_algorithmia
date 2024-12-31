@@ -18,11 +18,21 @@ struct Q2024_6;
 impl Solution for Q2024_6 {
     fn part_one(&self, input: &str) -> String {
         let tree = parse(input);
-        find_unique_path(&tree).expect("Path not found")
+        find_unique_path(&tree)
+            .expect("Path not found")
+            .iter()
+            .cloned()
+            .collect::<Vec<_>>()
+            .join("")
     }
 
-    fn part_two(&self, _input: &str) -> String {
-        todo!()
+    fn part_two(&self, input: &str) -> String {
+        let tree = parse(input);
+        find_unique_path(&tree)
+            .expect("Path not found")
+            .iter()
+            .filter_map(|s| s.chars().next())
+            .collect::<String>()
     }
 
     fn part_three(&self, _input: &str) -> String {
@@ -45,15 +55,16 @@ fn parse(input: &str) -> Tree {
     tree
 }
 
-fn find_unique_path(tree: &Tree) -> Option<String> {
+fn find_unique_path(tree: &Tree) -> Option<Vec<String>> {
     fn dfs<'l>(
         tree: &'l Tree,
         node: &'l str,
         path: &mut Vec<&'l str>,
-        output: &mut HashMap<usize, Vec<String>>,
+        output: &mut HashMap<usize, Vec<Vec<Node>>>,
     ) {
         if node == "@" {
-            let value = path.join("") + "@";
+            let mut value = path.iter().map(|s| s.to_string()).collect::<Vec<_>>();
+            value.push("@".to_string());
             let entry = output.entry(path.len()).or_default();
             entry.push(value);
             return;
