@@ -18,12 +18,7 @@ struct Q2024_6;
 impl Solution for Q2024_6 {
     fn part_one(&self, input: &str) -> String {
         let tree = parse(input);
-        find_unique_path(&tree)
-            .expect("Path not found")
-            .iter()
-            .cloned()
-            .collect::<Vec<_>>()
-            .join("")
+        find_unique_path(&tree).expect("Path not found").join("")
     }
 
     fn part_two(&self, input: &str) -> String {
@@ -84,8 +79,7 @@ fn find_unique_path(tree: &Tree) -> Option<Vec<String>> {
 
     output
         .iter()
-        .filter(|(_, val)| val.len() == 1)
-        .next()
+        .find(|(_, val)| val.len() == 1)
         .and_then(|(_, set)| set.iter().next().cloned())
 }
 
