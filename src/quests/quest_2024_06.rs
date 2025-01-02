@@ -5,7 +5,7 @@ use crate::{
     quests::{Quest, QuestInputLoader, Solution},
 };
 
-pub fn assemble_quest_2024_6() -> Quest {
+pub fn assemble() -> Quest {
     Quest {
         title: "Quest 2024 6: The Tree of Titans".to_string(),
         input_loader: QuestInputLoader::with_quest_date(2024, 6),

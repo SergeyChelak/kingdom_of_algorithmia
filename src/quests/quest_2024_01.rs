@@ -1,7 +1,7 @@
 use crate::quests::{Quest, QuestInputLoader, Solution};
 use std::collections::HashMap;
 
-pub fn assemble_quest_2024_1() -> Quest {
+pub fn assemble() -> Quest {
     Quest {
         title: "Quest 1: The Battle for the Farmlands".to_string(),
         input_loader: QuestInputLoader::with_quest_date(2024, 1),

@@ -2,7 +2,7 @@ use crate::common::strings::{reversed_str, TrimmedSplit};
 use crate::quests::{Quest, QuestInputLoader, Solution};
 use std::collections::HashSet;
 
-pub fn assemble_quest_2024_2() -> Quest {
+pub fn assemble() -> Quest {
     Quest {
         title: "Quest 2: The Runes of Power".to_string(),
         input_loader: QuestInputLoader::with_quest_date(2024, 2),

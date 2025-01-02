@@ -5,7 +5,7 @@
         "body": [
             "use crate::quests::{Quest, QuestInputLoader, Solution};",
             "",
-            "pub fn assemble_quest_$1_$2() -> Quest {",
+            "pub fn assemble() -> Quest {",
             "\tQuest {",
             "\t\ttitle: \"Quest $1 $2: ???\".to_string(),",
             "\t\tinput_loader: QuestInputLoader::with_quest_date($1, $2),",

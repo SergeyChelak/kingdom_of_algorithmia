@@ -3,7 +3,7 @@ use crate::{
     quests::{Quest, QuestInputLoader, Solution},
 };
 
-pub fn assemble_quest_2024_4() -> Quest {
+pub fn assemble() -> Quest {
     Quest {
         title: "Quest 2024 4: Royal Smith's Puzzle".to_string(),
         input_loader: QuestInputLoader::with_quest_date(2024, 4),

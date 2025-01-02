@@ -8,7 +8,7 @@ use crate::{
     quests::{Quest, QuestInputLoader, Solution},
 };
 
-pub fn assemble_quest_2024_5() -> Quest {
+pub fn assemble() -> Quest {
     Quest {
         title: "Quest 2024 5: Pseudo-Random Clap Dance".to_string(),
         input_loader: QuestInputLoader::with_quest_date(2024, 5),

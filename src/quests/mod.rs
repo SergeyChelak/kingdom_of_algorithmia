@@ -1,33 +1,29 @@
-use quest_2024_01::assemble_quest_2024_1;
-use quest_2024_02::assemble_quest_2024_2;
-use quest_2024_03::assemble_quest_2024_3;
-use quest_2024_04::assemble_quest_2024_4;
-use quest_2024_05::assemble_quest_2024_5;
-use quest_2024_06::assemble_quest_2024_6;
-
 mod quest_2024_01;
 mod quest_2024_02;
 mod quest_2024_03;
 mod quest_2024_04;
 mod quest_2024_05;
 mod quest_2024_06;
+mod quest_2024_07;
 
 pub struct QuestFactory;
 impl QuestFactory {
     pub fn quest(&self, number: usize) -> Option<Quest> {
-        match number {
-            1 => Some(assemble_quest_2024_1()),
-            2 => Some(assemble_quest_2024_2()),
-            3 => Some(assemble_quest_2024_3()),
-            4 => Some(assemble_quest_2024_4()),
-            5 => Some(assemble_quest_2024_5()),
-            6 => Some(assemble_quest_2024_6()),
-            _ => None,
-        }
+        [
+            quest_2024_01::assemble,
+            quest_2024_02::assemble,
+            quest_2024_03::assemble,
+            quest_2024_04::assemble,
+            quest_2024_05::assemble,
+            quest_2024_06::assemble,
+            quest_2024_07::assemble,
+        ]
+        .get(number - 1)
+        .map(|f| f())
     }
 
     pub fn custom(&self) -> Option<Quest> {
-        self.quest(6)
+        self.quest(7)
     }
 }
 
