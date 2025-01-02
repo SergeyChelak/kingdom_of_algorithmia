@@ -13,3 +13,11 @@ impl<T> Position2<T> {
         Self { row, col }
     }
 }
+
+#[derive(Debug, Copy, Clone)]
+pub enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
+}

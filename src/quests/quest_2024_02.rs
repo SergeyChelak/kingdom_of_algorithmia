@@ -1,4 +1,5 @@
 use crate::common::strings::{reversed_str, TrimmedSplit};
+use crate::common::Direction;
 use crate::quests::{Quest, QuestInputLoader, Solution};
 use std::collections::HashSet;
 
@@ -66,14 +67,6 @@ impl Solution for Q2024_2 {
 
         scales.len().to_string()
     }
-}
-
-#[derive(Copy, Clone)]
-enum Direction {
-    Up,
-    Down,
-    Left,
-    Right,
 }
 
 fn traverse(
