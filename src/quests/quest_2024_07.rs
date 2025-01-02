@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use crate::{
     common::{strings::TrimmedSplit, Direction},
@@ -37,9 +37,72 @@ impl Solution for Q2024_7 {
         perform_with_racetrack(data, 10, &racetrack)
     }
 
-    fn part_three(&self, _input: &str) -> String {
-        todo!()
+    fn part_three(&self, input: &str) -> String {
+        let racetrack = parse_racetrack(
+            r#"S+= +=-== +=++=     =+=+=--=    =-= ++=     +=-  =+=++=-+==+ =++=-=-=--
+- + +   + =   =     =      =   == = - -     - =  =         =-=        -
+= + + +-- =-= ==-==-= --++ +  == == = +     - =  =    ==++=    =++=-=++
++ + + =     +         =  + + == == ++ =     = =  ==   =   = =++=       
+= = + + +== +==     =++ == =+=  =  +  +==-=++ =   =++ --= + =          
++ ==- = + =   = =+= =   =       ++--          +     =   = = =--= ==++==
+=     ==- ==+-- = = = ++= +=--      ==+ ==--= +--+=-= ==- ==   =+=    =
+-               = = = =   +  +  ==+ = = +   =        ++    =          -
+-               = + + =   +  -  = + = = +   =        +     =          -
+--==++++==+=+++-= =-= =-+-=  =+-= =-= =--   +=++=+++==     -=+=++==+++-"#,
+        );
+        let actions = parse(input).values().next().cloned().expect("Empty input");
+        let base = ranking_with_racetrack(&actions, &racetrack);
+        total_winning_plans(&racetrack, base).to_string()
     }
+}
+
+fn total_winning_plans(racetrack: &[Action], base: usize) -> usize {
+    fn dfs(
+        racetrack: &[Action],
+        base: usize,
+        pluses: usize,
+        minuses: usize,
+        equals: usize,
+        acc: &mut Vec<Action>,
+        output: &mut HashSet<String>,
+    ) {
+        if pluses == 0 && minuses == 0 && equals == 0 {
+            let score = ranking_with_racetrack(acc, racetrack);
+            if score > base {
+                let val = acc
+                    .iter()
+                    .map(|x| match x {
+                        Action::Dec => '-',
+                        Action::Inc => '+',
+                        _ => '=',
+                    })
+                    .collect::<String>();
+                output.insert(val);
+            }
+            return;
+        }
+        if pluses > 0 {
+            acc.push(Action::Inc);
+            dfs(racetrack, base, pluses - 1, minuses, equals, acc, output);
+            acc.pop();
+        }
+
+        if minuses > 0 {
+            acc.push(Action::Dec);
+            dfs(racetrack, base, pluses, minuses - 1, equals, acc, output);
+            acc.pop();
+        }
+
+        if equals > 0 {
+            acc.push(Action::Keep);
+            dfs(racetrack, base, pluses, minuses, equals - 1, acc, output);
+            acc.pop();
+        }
+    }
+
+    let mut output = HashSet::new();
+    dfs(racetrack, base, 5, 3, 3, &mut Vec::new(), &mut output);
+    output.len()
 }
 
 fn perform(data: HashMap<String, Vec<Action>>, segments: usize) -> String {
@@ -50,11 +113,7 @@ fn perform(data: HashMap<String, Vec<Action>>, segments: usize) -> String {
             let action = params[segment % params.len()];
             let scores = scores.entry(key.clone()).or_default();
             let mut score = *(scores.last().unwrap_or(&10));
-            score = match action {
-                Action::Dec => score.saturating_sub(1),
-                Action::Inc => score + 1,
-                _ => score,
-            };
+            score = updated_score(score, action);
             scores.push(score);
         }
     }
@@ -66,12 +125,6 @@ fn perform_with_racetrack(
     rounds: usize,
     racetrack: &[Action],
 ) -> String {
-    let merged = |overridden: Action, action: Action| -> Action {
-        match overridden {
-            Action::Keep => action,
-            _ => overridden,
-        }
-    };
     let mut scores = HashMap::<String, Vec<usize>>::new();
     for round in 0..rounds * racetrack.len() {
         for key in data.keys() {
@@ -80,15 +133,38 @@ fn perform_with_racetrack(
             let overridden = racetrack[round % racetrack.len()];
             let scores = scores.entry(key.clone()).or_default();
             let mut score = *(scores.last().unwrap_or(&10));
-            score = match merged(overridden, action) {
-                Action::Dec => score.saturating_sub(1),
-                Action::Inc => score + 1,
-                _ => score,
-            };
+            score = updated_score(score, merged_action(overridden, action));
             scores.push(score);
         }
     }
     calc_ranking(&scores)
+}
+
+fn ranking_with_racetrack(params: &[Action], racetrack: &[Action]) -> usize {
+    let mut scores = Vec::<usize>::new();
+    for round in 0..2024 * racetrack.len() {
+        let action = params[round % params.len()];
+        let overridden = racetrack[round % racetrack.len()];
+        let mut score = *(scores.last().unwrap_or(&10));
+        score = updated_score(score, merged_action(overridden, action));
+        scores.push(score);
+    }
+    scores.iter().sum()
+}
+
+fn merged_action(overridden: Action, action: Action) -> Action {
+    match overridden {
+        Action::Keep => action,
+        _ => overridden,
+    }
+}
+
+fn updated_score(score: usize, action: Action) -> usize {
+    match action {
+        Action::Dec => score.saturating_sub(1),
+        Action::Inc => score + 1,
+        _ => score,
+    }
 }
 
 fn calc_ranking(scores: &HashMap<String, Vec<usize>>) -> String {
@@ -98,7 +174,6 @@ fn calc_ranking(scores: &HashMap<String, Vec<usize>>) -> String {
             let sum = scores.iter().sum::<usize>();
             (key, sum)
         })
-        // .inspect(|x| println!("{:?}", x))
         .collect::<Vec<_>>();
     scores.sort_by(|a, b| b.1.cmp(&a.1));
     scores
@@ -142,39 +217,37 @@ fn parse_action(ch: char) -> Action {
 
 fn parse_racetrack(input: &str) -> Vec<Action> {
     let matrix = input
-        .trimmed_split()
+        .split('\n')
         .map(|line| line.chars().collect::<Vec<_>>())
         .collect::<Vec<_>>();
-    let mut output = Vec::new();
-    let mut dir = Some(Direction::Right);
 
-    let next_dir = |d: Direction| -> Option<Direction> {
-        use Direction::*;
-        match d {
-            Right => Some(Down),
-            Down => Some(Left),
-            Left => Some(Up),
-            Up => None,
-        }
-    };
+    let mut visited = HashSet::new();
+    let mut output = Vec::new();
 
     let rows = matrix.len();
     let (mut r, mut c) = (0, 0);
-    while dir.is_some() {
+    loop {
+        visited.insert((r, c));
         let cols = matrix[r].len();
-        match dir.unwrap() {
-            Direction::Right if c < cols - 1 => c += 1,
-            Direction::Down if r < rows - 1 => r += 1,
-            Direction::Left if c > 0 => c -= 1,
-            Direction::Up if r > 0 => r -= 1,
-            _ => {
-                dir = next_dir(dir.unwrap());
-                continue;
-            }
-        }
+        let Some(next) = Direction::all_clockwise()
+            .iter()
+            .map(|dir| match dir {
+                Direction::Right if c < cols - 1 => (r, c + 1),
+                Direction::Down if r < rows - 1 => (r + 1, c),
+                Direction::Left if c > 0 => (r, c - 1),
+                Direction::Up if r > 0 => (r - 1, c),
+                _ => (r, c),
+            })
+            .filter(|(row, col)| !matrix[*row][*col].is_whitespace())
+            .find(|point| !visited.contains(point))
+        else {
+            break;
+        };
+        (r, c) = next;
         let action = parse_action(matrix[r][c]);
         output.push(action);
     }
+    output.push(Action::Keep);
     output
 }
 

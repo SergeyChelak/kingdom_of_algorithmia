@@ -21,3 +21,19 @@ pub enum Direction {
     Left,
     Right,
 }
+
+impl Direction {
+    pub fn _all() -> [Direction; 4] {
+        use Direction::*;
+        [Up, Down, Left, Right]
+    }
+
+    pub fn all_clockwise() -> [Direction; 4] {
+        [
+            Direction::Right,
+            Direction::Down,
+            Direction::Left,
+            Direction::Up,
+        ]
+    }
+}
